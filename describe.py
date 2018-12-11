@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import os
 import numpy as np
 import pandas as pd
 import sys
@@ -13,13 +14,6 @@ def exit_failure(msg):
 def exit_usage():
     exit_failure("Usage: describe.py [csv file name]")
 
-def to_float(a):
-    try:
-        float(a)
-        return True
-    except:
-        return False
-
 def load_datas(filename):
     try:
         d = np.genfromtxt(filename, skip_header=1, filling_values=-999, delimiter=',')
@@ -27,42 +21,51 @@ def load_datas(filename):
     except ValueError:
         exit_failure(f'Can\'t load file {filename}')
 
-def ft_describe(d):
-    labels = ["Count","Mean","Std","Min","25%","50%","75%","Max"]
+def ft_describe(d, n):
+    sm_pad = 5
+    lg_pad = 15
+
     fns = {
         "Count": ft_count,
         "Mean": ft_mean,
         "Std": ft_std,
         "Min": ft_min,
-        "25%": ft_mean,
+        "25%": ft_percentile(25),
         "50%": ft_mean,
-        "75%": ft_mean,
+        "75%": ft_percentile(75),
         "Max": ft_max
     }
     values = []
-    nb_features = len(d[0,:])
 
     # Header
-    print('\t', end='')
-    for i in range(nb_features):
-        endchar = '\t' if i + 1 < nb_features else '\n'
-        print(f'Feat{i}', end=endchar)
+    for i in range(n + 1):
+        pad = lg_pad if i > 0 else sm_pad
+        e = f'Feature{i}' if i > 0 else ''
+        endc = '\n' if i == n else '' 
+        print(f'{e:>{pad}}', end=endc)
 
-    for l in labels:
-        print(l, end='\t')
-        for i in range(nb_features):
+    for l in fns:
+        print(f'{l:<{sm_pad}}', end='')
+        for i in range(n):
             curr = d[:,i]
-            v = fns[l](curr)
-            print(int(v), end='\t')
-        print('\n')
+            v = f'{fns[l](curr):.6f}'
+            print(f'{v:>{lg_pad}}', end='')
+        print('')
 
 if __name__ == '__main__':
-    # print(ft_min([1,2,-5]))
-    # sys.exit()
+    # rows, columns = os.popen('stty size', 'r').read().split() //TODO : maybe fancy print
+    
     if len(sys.argv) != 2:
         exit_usage()
-    # v = np.vectorize(to_float)
     d = load_datas(sys.argv[1])
-    ft_describe(d)
-    s = pd.Series(d[:,0])
-    print(s.describe())
+    n = len(d[0,:])
+
+    ft_describe(d, n)
+
+    #PANDA print to compare
+    # datadict = {}
+    # for i in range(n):
+    #     key = f'Feature{i + 1}'
+    #     datadict[key] = d[:,i]
+    # s = pd.DataFrame(datadict)
+    # print(s.describe())

@@ -32,3 +32,10 @@ def ft_std(x):
     mean = ft_mean(x)
     count = ft_count(x)
     return math.sqrt(sum((x - mean)**2) / (count - 1))
+
+def ft_percentile(p): #TODO: fix
+    def h(v):
+        v.sort()
+        i = math.floor(((p / 100)) * len(v))
+        return v[i]
+    return (h)
