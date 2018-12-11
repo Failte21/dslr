@@ -62,10 +62,10 @@ if __name__ == '__main__':
 
     ft_describe(d, n)
 
-    #PANDA print to compare
-    # datadict = {}
-    # for i in range(n):
-    #     key = f'Feature{i + 1}'
-    #     datadict[key] = d[:,i]
-    # s = pd.DataFrame(datadict)
-    # print(s.describe())
+    # PANDA print to compare
+    datadict = {}
+    for i in range(n):
+        key = f'Feature{i + 1}'
+        datadict[key] = d[:,i]
+    s = pd.DataFrame(datadict)
+    print(s.describe())

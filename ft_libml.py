@@ -33,11 +33,15 @@ def ft_std(x):
     count = ft_count(x)
     return math.sqrt(sum((x - mean)**2) / (count - 1))
 
-def ft_percentile(p): #TODO: Secure for wrong values
+def ft_percentile(p): #TODO: Fix
     def h(v):
         n = len(v)
-        x = ((p / 100) * (n - 1))
-        f = int(x)
-        mod = x % 1
-        return v[f] + mod * (v[f] - v[f - 1])
+        # x = ((p / 100) * (n - 1) + 1)
+        # f = int(x)
+        # print(x)
+        # mod = x % 1
+        # print(mod)
+        # sys.exit()
+        # return v[f] + mod * (v[f + 1] - v[f])
+        return math.ceil((p / 100) * n)
     return (h)
