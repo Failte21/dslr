@@ -1,34 +1,40 @@
 #! /usr/bin/env python3
 
 import numpy as np
-import pandas as pd
 import sys
+import math
 
 from ft_libml import *
+from errors import exit_usage
+from load_datas import load_datas
 
-def exit_failure(msg):
-    print(msg)
-    sys.exit()
+#TODO: convert to class
 
-def exit_usage():
-    exit_failure("Usage: describe.py [csv file name]")
+def trim_name(e):
+    l_max = 15
+    return e if len(e) <= l_max else e[0:l_max - 3] + '...'
 
-def to_float(a):
-    try:
-        float(a)
-        return True
-    except:
-        return False
+def print_header(h_part, sm_pad, lg_pad):
+    h_part_space = [''] + h_part
 
-def load_datas(filename):
-    try:
-        d = np.genfromtxt(filename, skip_header=1, filling_values=-999, delimiter=',')
-        return d[:,d[0,:] != -999]
-    except ValueError:
-        exit_failure(f'Can\'t load file {filename}')
+    for i, h in enumerate(h_part_space):
+        pad = lg_pad if i > 0 else sm_pad
+        endchar = '' if i + 1 < len(h_part_space) else '\n'
+        print(f'{h:>{pad}}', end=endchar)
 
-def ft_describe(d):
-    labels = ["Count","Mean","Std","Min","25%","50%","75%","Max"]
+def print_datas(h_part, sm_pad, lg_pad, fns, s):
+    for l in fns:
+        print(f'{l:<{sm_pad}}', end='')
+        for i in range(s, s + len(h_part)):
+            curr = d[:,i]
+            v = fns[l](curr)
+            print(f'{int(v):>{lg_pad}}', end='')
+        print('')
+
+def ft_describe(d, headers):
+    sm_pad = 8
+    lg_pad = 17
+    feat_per_row = 7
     fns = {
         "Count": ft_count,
         "Mean": ft_mean,
@@ -42,27 +48,17 @@ def ft_describe(d):
     values = []
     nb_features = len(d[0,:])
 
-    # Header
-    print('\t', end='')
-    for i in range(nb_features):
-        endchar = '\t' if i + 1 < nb_features else '\n'
-        print(f'Feat{i}', end=endchar)
+    for j in range(math.ceil(nb_features / feat_per_row)):
+        s = j * feat_per_row
+        e = s + feat_per_row
+        h_part = [trim_name(e) for e in headers[s:e]]
 
-    for l in labels:
-        print(l, end='\t')
-        for i in range(nb_features):
-            curr = d[:,i]
-            v = fns[l](curr)
-            print(int(v), end='\t')
-        print('\n')
+        print_header(h_part, sm_pad, lg_pad)
+        print_datas(h_part, sm_pad, lg_pad, fns, s)
+        print('')
 
 if __name__ == '__main__':
-    # print(ft_min([1,2,-5]))
-    # sys.exit()
     if len(sys.argv) != 2:
         exit_usage()
-    # v = np.vectorize(to_float)
-    d = load_datas(sys.argv[1])
-    ft_describe(d)
-    s = pd.Series(d[:,0])
-    print(s.describe())
+    d, headers = load_datas(sys.argv[1])
+    ft_describe(d, headers)
