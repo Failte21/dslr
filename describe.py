@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import os
 import numpy as np
 import sys
 import math
@@ -35,20 +36,21 @@ def ft_describe(d, headers):
     sm_pad = 8
     lg_pad = 17
     feat_per_row = 7
+    n = len(d[0,:])
+
     fns = {
         "Count": ft_count,
         "Mean": ft_mean,
         "Std": ft_std,
         "Min": ft_min,
-        "25%": ft_mean,
+        "25%": ft_percentile(25),
         "50%": ft_mean,
-        "75%": ft_mean,
+        "75%": ft_percentile(75),
         "Max": ft_max
     }
     values = []
-    nb_features = len(d[0,:])
 
-    for j in range(math.ceil(nb_features / feat_per_row)):
+    for j in range(math.ceil(n / feat_per_row)):
         s = j * feat_per_row
         e = s + feat_per_row
         h_part = [trim_name(e) for e in headers[s:e]]
