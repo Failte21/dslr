@@ -23,10 +23,10 @@ def std(x):
     c = count(x)
     return math.sqrt(sum((d - m)**2) / (c - 1))
 
-def percentile(v, p): #TODO: Fix
+def percentile(v, p): #TODO: np percentile: be able to explain
     d = sorted(v.dropna())
     n = len(d)
-    x = p * ((n - 1) + 1)
+    x = p * (n - 1)
     i = int(x)
     mod = x % 1
     return d[i] + (mod * (d[i + 1] - d[i]))

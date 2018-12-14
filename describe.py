@@ -24,16 +24,16 @@ def ft_describe(d):
     }, axis='index')
     print(df)
 
-    #DEBUG
+    # DEBUG
     # print('')
     # print(d['Arithmancy'].count())
     # print(d['Arithmancy'].mean())
     # print(d['Arithmancy'].std())
     # print(d['Arithmancy'].min())
-    # print(d['Arithmancy'].max())
     # print(d['Arithmancy'].quantile(.25))
     # print(d['Arithmancy'].quantile(.5))
     # print(d['Arithmancy'].quantile(.75))
+    # print(d['Arithmancy'].max())
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
