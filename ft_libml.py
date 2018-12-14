@@ -10,23 +10,23 @@ def mean(x):
     return sum(d) / count(d)
 
 def min(x):
-    d = x.dropna()
-    return d.iloc[0]
+    d = sorted(x.dropna())
+    return d[0]
 
 def max(x):
-    d = x.dropna()
-    return d.iloc[len(d) - 1]
+    d = sorted(x.dropna())
+    return d[len(d) - 1]
 
 def std(x):
-    d = x.dropna()
-    m = mean(d)
-    c = count(d)
+    d = sorted(x.dropna())
+    m = mean(x)
+    c = count(x)
     return math.sqrt(sum((d - m)**2) / (c - 1))
 
 def percentile(v, p): #TODO: Fix
-    d = v
-    n = count(d)
-    x = p * (n - 1) + 1)
+    d = sorted(v.dropna())
+    n = len(d)
+    x = p * ((n - 1) + 1)
     i = int(x)
     mod = x % 1
     return d[i] + (mod * (d[i + 1] - d[i]))
