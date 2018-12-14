@@ -26,16 +26,16 @@ def std(x):
 def percentile(v, p): #TODO: Fix
     d = v
     n = count(d)
-    x = ((p / 100) * (n - 1) + 1)
+    x = p * (n - 1) + 1)
     i = int(x)
     mod = x % 1
     return d[i] + (mod * (d[i + 1] - d[i]))
 
 def per_25(v):
-    return percentile(v, 25)
+    return percentile(v, 0.25)
 
 def per_50(v):
-    return percentile(v, 50)
+    return percentile(v, 0.5)
 
 def per_75(v):
-    return percentile(v, 75)
+    return percentile(v, 0.75)
