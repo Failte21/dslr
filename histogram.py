@@ -1,28 +1,33 @@
 #! /usr/bin/env python3
 
 import matplotlib.pyplot as plt
-import numpy as np
+import pandas as pd
+
+from load_datas import load_datas, courses
+from parsing import parse_main
 
 if __name__ == '__main__':
-    data = np.loadtxt("resources/dataset_train.csv", dtype='str', delimiter=',')
-    classes = ['Arithmancy', 'Astronomy', 'Herbology', 'Defense Against the Dark Arts', 
-        'Divination', 'Muggle Studies', 'Ancient Runes', 'History of Magic',
-        'Transfiguration', 'Potions', 'Care of Magical Creatures', 'Charms', 'Flying'
-    ]
 
-    gryffindor = data[data[:,1] == 'Gryffindor']
-    hufflepuff = data[data[:,1] == 'Hufflepuff']
-    slytherin = data[data[:,1] == 'Slytherin']
-    ravenclaw = data[data[:,1] == 'Ravenclaw']
-    fig, axes = plt.subplots(nrows=3, ncols=4)
-    colors = ['red', 'tan', 'lime', 'blue']
-    n_bins = 10
-    for i in range(6,18):
-        g = [float(e) for e in gryffindor[:,i] if e != '']
-        h = [float(e) for e in hufflepuff[:,i] if e != '']
-        s = [float(e) for e in slytherin[:,i] if e != '']
-        r = [float(e) for e in ravenclaw[:,i] if e != '']
-        x = np.array([g, h, s, r])
-        axes.flatten()[i - 6].hist(x, n_bins, histtype='bar')
+    #TODO: colors
+    #TODO: legend
 
+    args = parse_main()
+    d = load_datas(args.filename, ['Hogwarts House'])
+    gryffindor = d[(d['Hogwarts House'] == 'Gryffindor')].drop(['Hogwarts House'], axis=1)
+    hufflepuff = d[(d['Hogwarts House'] == 'Hufflepuff')].drop(['Hogwarts House'], axis=1)
+    slytherin = d[(d['Hogwarts House'] == 'Slytherin')].drop(['Hogwarts House'], axis=1)
+    ravenclaw = d[(d['Hogwarts House'] == 'Ravenclaw')].drop(['Hogwarts House'], axis=1)
+
+    fig, axes = plt.subplots(nrows=4, ncols=4, figsize=(16, 12))
+    for i, c in enumerate(courses):
+        df = pd.concat([
+            gryffindor[c],
+            hufflepuff[c],
+            slytherin[c],
+            ravenclaw[c],
+        ], axis=1, keys=['gryffindor', 'hufflepuff', 'slytherin', 'ravenclaw'])
+        x = i % 4
+        y = int(i / 4)
+        a = df.plot.hist(stacked=True, bins=20, ax=axes[y,x], legend=False)
+        a.set_ylabel(c)
     plt.show()
