@@ -1,3 +1,5 @@
+import sys
+
 def exit_failure(msg):
     print(msg)
     sys.exit()
