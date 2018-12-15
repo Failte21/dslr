@@ -23,3 +23,10 @@ def load_datas(filename, extra=[]):
         return d
     except ValueError:
         exit_failure(f'Can\'t load file {filename}')
+
+def filter_houses(d):
+	gryffindor = d[(d['Hogwarts House'] == 'Gryffindor')].drop(['Hogwarts House'], axis=1)
+	hufflepuff = d[(d['Hogwarts House'] == 'Hufflepuff')].drop(['Hogwarts House'], axis=1)
+	slytherin = d[(d['Hogwarts House'] == 'Slytherin')].drop(['Hogwarts House'], axis=1)
+	ravenclaw = d[(d['Hogwarts House'] == 'Ravenclaw')].drop(['Hogwarts House'], axis=1)
+	return [gryffindor, hufflepuff, slytherin, ravenclaw]
